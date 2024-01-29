@@ -1,0 +1,39 @@
+import joi from "joi";
+export const addProductSchema=joi.object({
+    body:{
+        title:joi.string().min(1).max(30).trim().required(),
+        description:joi.string().max(1000),
+        stock:joi.number().required(),
+        features:joi.array().items(joi.object({
+            key:joi.string().max(30).min(1).trim(),
+            value:joi.string().max(30).min(1).trim()
+        })),
+        discountedPrice:joi.number(),
+        price:joi.number(),
+        coverImage:joi.string().hex().length(24),
+        productImage:joi.array().items(joi.object({
+            Image:joi.string().hex().length(24)
+        })),
+        category:joi.string().hex().length(24),
+        subcategory:joi.string().hex().length(24)
+    }
+})
+export const updateProductSchema=joi.object({
+    body:{
+        title:joi.string().min(1).max(30).trim().required(),
+        description:joi.string().max(1000),
+        stock:joi.number().required(),
+        features:joi.array().items(joi.object({
+            key:joi.string().max(30).min(1).trim(),
+            value:joi.string().max(30).min(1).trim()
+        })),
+        discountedPrice:joi.number(),
+        price:joi.number(),
+        coverImage:joi.string().hex().length(24),
+        productImage:joi.array().items(joi.object({
+            Image:joi.string().hex().length(24)
+        })),
+        category:joi.string().hex().length(24),
+        subcategory:joi.string().hex().length(24)
+    }
+})

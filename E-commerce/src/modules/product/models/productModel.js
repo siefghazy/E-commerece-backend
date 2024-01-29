@@ -1,0 +1,76 @@
+import mongoose from "mongoose";
+import slugify from "slugify";
+const productSchema=new mongoose.Schema({
+    title:{
+        type:String,
+        required:true,
+        unique:true,
+        min:1,
+        max:30
+    },
+    slug:{
+        type:String,
+        unique:true,
+        min:1,
+    },
+    description:{
+        type:String,
+    },
+    stock:{
+        type:Number,
+        required:true,
+    },
+    features:[
+        {
+            key:{
+                type:String,
+                min:1,
+                max:30
+            },
+            value:{
+                type:String,
+                min:1,
+                max:30
+            }
+        }
+    ],
+    price:{
+        type:Number,
+        required:true
+    },
+    discountedPrice:{
+        type:Number,
+    },
+    discountVal:{
+        type:Number,
+    },
+    coverImage:{
+        type:mongoose.Schema.ObjectId,
+        ref:'image',
+    },
+    productImages:[
+        {
+            iamge:{
+                type:mongoose.Schema.ObjectId,
+                ref:'image'
+            }
+        }
+    ],
+    category:{
+        type:mongoose.Schema.ObjectId,
+        ref:"category",
+        required:true
+    },
+    subcategory:{
+        type:mongoose.Schema.ObjectId,
+        ref:"subcategory",
+    }
+},{timestamps:true})
+productSchema.pre('save',function(next){
+    this.slug=slugify(this.title)
+    if(this.discountedPrice){
+    this.discountVal=this.price-this.discountedPrice
+    }
+    next()
+})
+export const productModel=mongoose.model('product',productSchema)
