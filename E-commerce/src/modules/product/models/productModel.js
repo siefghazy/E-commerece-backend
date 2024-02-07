@@ -64,6 +64,7 @@ const productSchema=new mongoose.Schema({
     subcategory:{
         type:mongoose.Schema.ObjectId,
         ref:"subcategory",
+        required:true
     }
 },{timestamps:true})
 productSchema.pre('save',function(next){
