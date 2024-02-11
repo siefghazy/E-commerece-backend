@@ -9,12 +9,13 @@ import { subCatModel } from "../model/subCatModel.js";
 import { addsubCategorySchema,updateSubCatSchema } from "../../../../validations/subcateValidation.js";
 import {subcatFilter}from'../middlware/subcatMiddleware.js'
 import { addSubCategory } from "../middlware/subcatMiddleware.js";
+import { file } from "../../../../middleware/multermiddleware.js";
+import { upload } from "../../../../middleware/imageUploadMiddleware.js";
 export const subCatRouter=Router({mergeParams:true})
 subCatRouter.route('/')
 .get(attachFindQuery(subCatModel),queryExecution())
-.post(validate(addsubCategorySchema),attachAddQuery(subCatModel),queryExecution())
 subCatRouter.route('/:subcategorySlug')
-.post(validate(addsubCategorySchema),addSubCategory,queryExecution())
+.post(file,validate(addsubCategorySchema),upload(),addSubCategory,queryExecution())
 .get(attachFindQuery(subCatModel),subcatFilter,queryExecution())
-.put(validate(updateSubCatSchema),attachUpdateQuery(subCatModel),subcatFilter,queryExecution())
+.put(file,validate(updateSubCatSchema),upload(),attachUpdateQuery(subCatModel),subcatFilter,queryExecution())
 .delete(attachDeleteQuery(subCatModel),subcatFilter,queryExecution())
