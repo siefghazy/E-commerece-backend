@@ -12,11 +12,16 @@ const categorySchema =new mongoose.Schema({
     },
     categoryImage:{
         type:mongoose.Schema.ObjectId,
-        ref:'image'
+        ref:'image',
+        required:true
     }
-})
+},{timestamps:true})
 categorySchema.pre('save',function(next){
     this.slug=slugify(this.name)
+    next()
+})
+categorySchema.pre(/find/,function(next){
+    this.populate('categoryImage',['path'])
     next()
 })
 export const categoryModel= mongoose.model('category',categorySchema)
