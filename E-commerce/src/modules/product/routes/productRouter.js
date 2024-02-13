@@ -11,13 +11,16 @@ import { sorting } from "../../../../middleware/sorting.js";
 import { fieldSelection } from "../../../../middleware/fieldSelectionMiddleware.js";
 import { search } from "../../../../middleware/searchMiddleware.js";
 import { filter } from "../../../../middleware/filterMiddlewarae.js";
+import { file } from "../../../../middleware/multermiddleware.js";
+import { attachCategory } from "../middlewares/categoryAttachToProduct.js";
+import { productImageUploader } from "../middlewares/productImageMiddleware.js";
 export const productRouter=Router()
 productRouter.route('/')
-.post(validate(addProductSchema),attachAddQuery(productModel),queryExecution())
-.get(attachFindQuery(productModel),populateQuery('subcategory'),pagination(2),sorting(),fieldSelection(),queryExecution())
+.post(file.fields([{name:'cover_image',maxCount:1},{name:'image',maxCount:3}]),validate(addProductSchema),productImageUploader(),attachCategory(),attachAddQuery(productModel),queryExecution())
+.get(attachFindQuery(productModel),populateQuery('category'),pagination(2),queryExecution())
 productRouter.route('/:productSlug')
 .delete(attachDeleteQuery(productModel),filterQuery({fieldName:'slug',paramName:'productSlug'}),queryExecution())
-.put(validate(updateProductSchema),attachUpdateQuery(productModel),filterQuery({fieldName:'slug',paramName:'productSlug'}),queryExecution())
+.put(file.fields([{name:'coverImages',maxCount:1},{name:'productImages',maxCount:3}]),validate(updateProductSchema),attachUpdateQuery(productModel),filterQuery({fieldName:'slug',paramName:'productSlug'}),queryExecution())
 productRouter.route('/search')
 .get(attachFindQuery(productModel),search(['title','description']),populateQuery('category'),pagination(2),queryExecution())
 productRouter.route('/fitler')
