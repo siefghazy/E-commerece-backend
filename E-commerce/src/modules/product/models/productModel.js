@@ -47,24 +47,25 @@ const productSchema=new mongoose.Schema({
     coverImage:{
         type:mongoose.Schema.ObjectId,
         ref:'image',
+        required:true
     },
     productImages:[
         {
             iamge:{
                 type:mongoose.Schema.ObjectId,
-                ref:'image'
+                ref:'image',
+                //required:true
             }
         }
     ],
     category:{
         type:mongoose.Schema.ObjectId,
         ref:"category",
-        required:true
+       required:true
     },
     subcategory:{
         type:mongoose.Schema.ObjectId,
         ref:"subcategory",
-        required:true
     }
 },{timestamps:true})
 productSchema.pre('save',function(next){
@@ -74,4 +75,9 @@ productSchema.pre('save',function(next){
     }
     next()
 })
+productSchema.pre(/find/i,function(next){
+    this.populate('subcategory')
+    next()
+})
+
 export const productModel=mongoose.model('product',productSchema)
