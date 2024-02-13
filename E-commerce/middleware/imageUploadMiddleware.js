@@ -11,11 +11,7 @@ export const upload=({modelImage})=>{
         next()
     })
 }
-export const deleteImage=()=>{
-    return catchAsyncError(async (req,res,next)=>{
-        const{image_name}=req.body
+export const deleteImage=(image_name)=>{
         await cloudinary.uploader.destroy(image_name)
-        await imageModel.findOneAndDelete({image_name})
-        next()
     })
 }
