@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import slugify from "slugify";
+import { imageModel } from "../../../../imageModel.js";
 const productSchema=new mongoose.Schema({
     title:{
         type:String,
@@ -51,10 +52,9 @@ const productSchema=new mongoose.Schema({
     },
     productImages:[
         {
-            iamge:{
+            image:{
                 type:mongoose.Schema.ObjectId,
                 ref:'image',
-                //required:true
             }
         }
     ],
@@ -77,6 +77,16 @@ productSchema.pre('save',function(next){
 })
 productSchema.pre(/find/i,function(next){
     this.populate('subcategory')
+    next()
+})
+productSchema.pre(/delete/i,async function(next){
+    const productToBeDeleted =await productModel.findOne(this._conditions)
+    const images=productToBeDeleted.productImages
+    await imageModel.findByIdAndDelete(productToBeDeleted.coverImage)
+    for(const image of images){
+        const{image:_id}=image
+        await imageModel.findByIdAndDelete(_id)
+    }
     next()
 })
 
