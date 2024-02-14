@@ -30,5 +30,12 @@ categorySchema.pre(/delete/i,async function(next){
    await imageModel.findByIdAndDelete(documentToBeDeleted.categoryImage)
    next()
 })
+categorySchema.pre(/update/i,async function(next){
+    if(this._update.categoryImage){
+        const documentToBeDeleted=await categoryModel.findOne(this._conditions)
+        await imageModel.findByIdAndDelete(documentToBeDeleted.categoryImage)
+    }
+    next()
+})
 export const categoryModel= mongoose.model('category',categorySchema)
 
