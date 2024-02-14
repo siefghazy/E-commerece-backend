@@ -34,4 +34,11 @@ subcatSchema.pre(/find/i,function(next){
     this.populate('category')
     next()
 })
+subcatSchema.pre(/update/i,async function(next){
+    if(this._update.subCatImage){
+        const subCatToBeDeleted=await subCatModel.findOne(this._conditions)
+        await imageModel.findByIdAndDelete(subCatToBeDeleted.subCatImage)
+        next()
+    }
+})
 export const subCatModel=mongoose.model('subcategory',subcatSchema)
