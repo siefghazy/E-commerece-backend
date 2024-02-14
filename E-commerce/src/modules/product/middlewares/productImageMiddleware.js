@@ -17,10 +17,12 @@ export const productImageUploader=()=>{
         const{_id}=await imageModel.create({image_name:public_id,path:secure_url})
         array.push(_id)
        }
-       array.map((Element)=>{
-        return {image:Element}
+       const modifiedArray=array.map(Element=>{
+        return {
+            image:Element
+        }
        })
-       req.body['productImages']=array
+       req.body.productImages=modifiedArray
        next()
     })
 }
