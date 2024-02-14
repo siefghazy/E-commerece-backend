@@ -89,5 +89,20 @@ productSchema.pre(/delete/i,async function(next){
     }
     next()
 })
+productSchema.pre(/update/i,async function(next){
+    if(this._update.coverImage){
+    const productToBeDeleted =await productModel.findOne(this._conditions)
+    await imageModel.findByIdAndDelete(productToBeDeleted.coverImage)
+    }
+    if(this._update.productImages){
+    const productToBeDeleted =await productModel.findOne(this._conditions)
+    const images=productToBeDeleted.productImages
+    for(const image of images){
+        const{image:_id}=image
+        await imageModel.findByIdAndDelete(_id)
+    }
+}
+    next()
+})
 
 export const productModel=mongoose.model('product',productSchema)
