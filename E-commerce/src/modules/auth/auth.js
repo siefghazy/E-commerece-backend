@@ -10,7 +10,7 @@ export const signUp=catchAsyncError(async(req,res,next)=>{
     if(!data){
     const{firstname,lastname,email,password,recoveryemail,DOB,mobileNumber,role}=req.body
     const hashedPassword=bcrypt.hashSync(password,parseInt(process.env.SALT_NUMBER))
-    await userModel.create({firstname,lastname,email,password:hashedPassword,recoveryemail,DOB,mobileNumber,role})
+    await userModel.create({email,password:hashedPassword})
     return res.status(200).json({message:'sign up succ..'})
     }
     throw new AppError('email already exist',400)
