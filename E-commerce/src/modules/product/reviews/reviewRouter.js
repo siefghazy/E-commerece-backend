@@ -7,4 +7,6 @@ export const reviewRouter=Router({mergeParams:true})
 reviewRouter.route('/')
 .post(auth,validate(addReviewSchema),addReview)
 .get(auth,getReviews)
+.put(auth,validate(updateReviewSchema),updateReview)
+.delete(auth,deleteReview)
 
