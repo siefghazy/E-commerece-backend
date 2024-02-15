@@ -8,7 +8,7 @@ export const signUp=catchAsyncError(async(req,res,next)=>{
     const{email}=req.body
     const data=await userModel.findOne({email})
     if(!data){
-    const{firstname,lastname,email,password,recoveryemail,DOB,mobileNumber,role}=req.body
+    const{email,password,role}=req.body
     const hashedPassword=bcrypt.hashSync(password,parseInt(process.env.SALT_NUMBER))
     await userModel.create({email,password:hashedPassword})
     return res.status(200).json({message:'sign up succ..'})
