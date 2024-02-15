@@ -7,6 +7,7 @@ import { cartRouter } from "../modules/cart/routes/cartRouter.js";
 import { userRouter } from "../modules/user/routes/userRouter.js";
 import { orderRouter } from "../modules/order/routes/ordersRouter.js";
 import brandRouter from "../modules/brand/routes/brandRouter.js";
+import { authRouter } from "../modules/auth/authRouters.js";
 const v1Router=Router()
 v1Router.use('/brand',brandRouter)
 v1Router.use('/coupon',couponRouter)
@@ -16,4 +17,5 @@ v1Router.use('/subcategory',subCatRouter)
 v1Router.use('/cart',cartRouter)
 v1Router.use('/user',userRouter)
 v1Router.use('/order',orderRouter)
+v1Router.use('/auth',authRouter)
 export default v1Router
