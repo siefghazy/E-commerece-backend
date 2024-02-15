@@ -11,18 +11,21 @@ export const updateUserSchema=joi.object({
         name:joi.string().max(30).min(3).required(),
         password:joi.string().max(100).min(5).required(),
         role:joi.string().required()
-    }
+    },
+  params:{}
 })
 export const signUpSchema=joi.object({
     body:{
         name:joi.string().max(30).min(3).required(),
         password:joi.string().max(100).min(5).required(),
         role:joi.string().required()
-    }
+    },
+     params:{}
 })
 export const signinScehma=joi.object({
     body:{
         name:joi.string().max(30).min(3).required(),
         password:joi.string().max(100).min(5).required(),
-    }
+    },
+   params:{}
 })
