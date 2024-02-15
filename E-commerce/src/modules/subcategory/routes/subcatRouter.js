@@ -11,12 +11,13 @@ import {subcatFilter}from'../middlware/subcatMiddleware.js'
 import { addSubCategory } from "../middlware/subcatMiddleware.js";
 import { file } from "../../../../middleware/multermiddleware.js";
 import { upload } from "../../../../middleware/imageUploadMiddleware.js";
-import { deleteImage } from "../../../../middleware/imageUploadMiddleware.js";
+import { auth } from "../../../../middleware/auth.js";
+import { authorization } from "../../../../middleware/authorization.js";
 export const subCatRouter=Router({mergeParams:true})
 subCatRouter.route('/')
 .get(attachFindQuery(subCatModel),queryExecution())
 subCatRouter.route('/:subcategorySlug')
-.post(file,validate(addsubCategorySchema),upload({modelImage:'subCatImage'}),addSubCategory,queryExecution())
+.post(auth,authorization,file.single('img'),validate(addsubCategorySchema),addSubCategory,upload({modelImage:'subCatImage'}),queryExecution())
 .get(attachFindQuery(subCatModel),subcatFilter,queryExecution())
-.put(file,validate(updateSubCatSchema),upload({modelImage:'subCatImage'}),attachUpdateQuery(subCatModel),subcatFilter,queryExecution())
-.delete(attachDeleteQuery(subCatModel),deleteImage(),subcatFilter,queryExecution())
+.put(auth,authorization,file.single('img'),validate(updateSubCatSchema),upload({modelImage:'subCatImage'}),attachUpdateQuery(subCatModel),subcatFilter,queryExecution())
+.delete(auth,authorization,attachDeleteQuery(subCatModel),subcatFilter,queryExecution())
