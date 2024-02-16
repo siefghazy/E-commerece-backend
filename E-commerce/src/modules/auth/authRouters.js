@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { signupScehma
-    ,signinScehma } from "../validations/userValidations.js";
-import { validate } from "../middlewares/validate.js";
-import { signUp
-    ,signIn } from "./auth.js";
+import { signinScehma,signUpSchema } from "../../../validations/userValidation.js";
+import { validate } from "../../../middleware/validationMiddleware.js";
+import { signIn,signUp } from "./auth.js";
+import { confirmEmail } from "../../../middleware/confirmEmail.js";
 export const authRouter=Router()
 authRouter.route('/signup')
-.post(validate(signupScehma),signUp)
+.post(validate(signUpSchema),signUp)
 authRouter.route('/signin').
 get(validate(signinScehma),signIn)
+authRouter.route('/confirmemail/:token')
+.get(confirmEmail)
