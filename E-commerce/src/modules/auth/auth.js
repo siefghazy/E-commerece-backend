@@ -12,8 +12,8 @@ export const signUp=catchAsyncError(async(req,res,next)=>{
     const{email,password,role}=req.body
     const hashedPassword=bcrypt.hashSync(password,parseInt(process.env.SALT_NUMBER))
     await userModel.create({email,password:hashedPassword,role})
-    const emailToken=Jwt.sign({email},process.env.EMAIL_SECRET_KEY)
-    const link=process.env.HOST+`confirmemail/${emailToken}`
+    const emailToken=jwt.sign({email},process.env.EMAIL_SECRET_KEY)
+      const link=process.env.HOST+'api/v1/auth/'+`confirmemail/${emailToken}`
     await transporter.sendMail({
       from:process.env.EMAIL,
       to:email,
