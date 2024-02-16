@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 const userSchema= new mongoose.Schema({
-    name:{
+    email:{
         type:String,
         max:30,
         min:1,
@@ -21,8 +21,14 @@ const userSchema= new mongoose.Schema({
     email_verificatiion:{
         type:String,
         enum:['verified','not verified'],
-        required:true,
+        //required:true,
         default:'not verified'
-    }
-})
+    },
+    wishlist:[
+        {
+            type:mongoose.Schema.ObjectId,
+            ref:'product'
+        }
+    ]
+},{timestamps:true})
 export const userModel=mongoose.model('user',userSchema)
