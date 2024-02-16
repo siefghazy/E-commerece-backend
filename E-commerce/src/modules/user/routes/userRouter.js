@@ -1,17 +1,23 @@
 import {Router} from'express'
-import { attachAddQuery
-    ,attachDeleteQuery
-    ,attachFindQuery
-    ,attachUpdateQuery } from '../../../../middleware/attachedQuery.js'
-import { filterQuery } from '../../../../middleware/filterQuery.js'
-import { queryExecution } from '../../../../middleware/execQuery.js'
 import {validate} from'../../../../middleware/validationMiddleware.js'
-import { addUserSchema,updateUserSchema } from '../../../../validations/userValidation.js'
-import { userModel } from '../model/userModel.js'
+import { updateUserSchema } from '../../../../validations/userValidation.js'
+import { auth } from "../../../../middleware/auth.js";
+import { authorization } from "../../../../middleware/authorization.js";
+import { getAlluser,getUser,updateUser,deleteUser } from '../controller/userController.js';
+import { getWishlist,updateWishlist } from '../controller/wishlistController.js';
+import { updateWishlistSchema } from '../../../../validations/wishlistValidation.js';
 export const userRouter=Router()
 userRouter.route('/')
-.get(attachFindQuery(userModel),queryExecution())
-.post(validate(addUserSchema),attachAddQuery(userModel),queryExecution())
-userRouter.route('/:id')
-.delete(attachDeleteQuery(userModel),filterQuery(),queryExecution())
-.put(validate(updateUserSchema),attachUpdateQuery(userModel),filterQuery(),queryExecution())
+.get(auth,getUser)
+.delete(auth,deleteUser)
+.put(auth,validate(updateUserSchema),updateUser)
+userRouter.route('/all')
+.get(auth,authorization,getAlluser)
+userRouter
+	.route('/wishlist')
+	.get(auth, getWishlist)
+	.put(
+		auth,
+		validate(updateWishlistSchema),
+		updateWishlist
+	)
