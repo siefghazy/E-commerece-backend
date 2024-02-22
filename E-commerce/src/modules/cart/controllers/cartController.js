@@ -7,11 +7,12 @@ export const addToCart=catchAsyncError(async(req,res,next)=>{
     const{_id:userID}=jwt.decode(token)
     const{productID}=req.body
     const cart=await cartModel.findOne({userID})
-    const productsOnCart=cart.ordersOnCart.find((entery)=>{
-        entery.productID.toString()===productID
-    })
-    if(productsOnCart) productsOnCart.quantity++
-    else cart.ordersOnCart.push({productID,quantity:1})
+    const productsOnCart=cart.ordersOnCart.find(
+        (entery)=> entery.productID._id.toString()===productID
+    )
+    if(productsOnCart) {
+        productsOnCart.quantity++}
+    else{ cart.ordersOnCart.push({productID,quantity:1})}
     await cart.save()
     res.status(200).json({message:"updated"})
 })
@@ -21,7 +22,7 @@ export const removeFromCart=catchAsyncError(async(req,res,next)=>{
     const{productID}=req.body
     const cart=await cartModel.findOne({userID})
     const productsOnCart=cart.ordersOnCart.find((product)=>{
-        product.productID.toString()===productID
+        product.productID._id.toString()===productID
     })
     if(productsOnCart) productsOnCart.quantity--
     if(productsOnCart.quantity===0) cart.ordersOnCart.remove(productsOnCart)
@@ -32,9 +33,10 @@ export const assertCart=catchAsyncError(async(req,res,next)=>{
     const token=req.header('token')
     const{_id:userID}=jwt.decode(token)
     const cart=await cartModel.findOne({userID})
-    if(!cart){
-        await cartModel.create({userID})
+    if(cart){
+        return next()
     }
+    await cartModel.create({userID,ordersOnCart:[]})
     next()
 })
 export const applyCoupon=catchAsyncError(async(req,res,next)=>{
