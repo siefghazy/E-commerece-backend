@@ -1,13 +1,14 @@
 import { Router } from "express";
-import { attachAddQuery,attachDeleteQuery,attachFindQuery,attachUpdateQuery } from '../../../../middleware/attachedQuery.js'
-import { filterQuery } from '../../../../middleware/filterQuery.js'
-import { queryExecution } from '../../../../middleware/execQuery.js'
 import {validate} from'../../../../middleware/validationMiddleware.js'
-import { couponModel } from "../models/couponModel.js";
 import { addCouponScehma,updateCouponScehma } from "../../../../validations/couponValidation.js";
+import { addCoupon,getCoupons,deleteCoupon,updateCoupon,getCoupon } from "../controllers/couponController.js";
+import { auth } from "../../../../middleware/auth.js";
+import { authorization } from "../../../../middleware/authorization.js";
 export const couponRouter=Router()
 couponRouter.route('/')
-.post(validate(addCouponScehma),attachAddQuery(couponModel),queryExecution())
-.get(attachFindQuery(couponModel),queryExecution())
-couponRouter.route('/:id').put(validate(updateCouponScehma),attachUpdateQuery(couponModel),filterQuery(),queryExecution())
-.delete(attachDeleteQuery(couponModel),filterQuery(),queryExecution())
+.post(auth,authorization,validate(addCouponScehma),addCoupon)
+.get(auth,authorization,getCoupons)
+couponRouter.route('/:id')
+.put(auth,authorization,validate(updateCouponScehma),updateCoupon)
+.delete(auth,authorization,deleteCoupon)
+.get(auth,authorization,getCoupon)
