@@ -1,17 +1,13 @@
 import { Router } from "express";
-import { attachAddQuery,
-    attachDeleteQuery,
-    attachFindQuery,
-    attachUpdateQuery } from '../../../../middleware/attachedQuery.js'
-import { filterQuery } from '../../../../middleware/filterQuery.js'
-import { queryExecution } from '../../../../middleware/execQuery.js'
 import {validate} from'../../../../middleware/validationMiddleware.js'
-import { orderModel } from "../models/orderModel.js";
-import { addOrderSchema,updateOrderSchema } from "../../../../validations/orderValidation.js";
+import { addOrderSchema } from "../../../../validations/orderValidation.js";
+import { auth } from "../../../../middleware/auth.js";
+import { getOrders,makeCODorder,makePaymentSession } from "../controllers/orderController.js";
+import { assertCart } from "../../cart/controllers/cartController.js";
 export const orderRouter=Router()
 orderRouter.route('/')
-.post(validate(addOrderSchema),attachAddQuery(orderModel),queryExecution())
-.get(attachFindQuery(orderModel),queryExecution())
-orderRouter.route('/:id')
-.delete(attachDeleteQuery(orderModel),filterQuery(),queryExecution())
-.put(validate(updateOrderSchema),attachUpdateQuery(orderModel),filterQuery(),queryExecution())
+.get(auth,getOrders)
+orderRouter.route('/cash')
+.post(auth,validate(addOrderSchema),assertCart,makeCODorder)
+orderRouter.route('/card')
+.post(auth,validate(addOrderSchema),assertCart,makePaymentSession)
